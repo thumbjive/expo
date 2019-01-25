@@ -3,13 +3,12 @@
 #import <UIKit/UIKit.h>
 #import <EventKit/EventKit.h>
 
+#import <EXCore/EXUtilities.h>
+
 #import <EXCalendar/EXCalendar.h>
 #import <EXCalendar/EXCalendarConverter.h>
 
 #import <EXPermissionsInterface/EXPermissionsInterface.h>
-
-//#import <React/RCTConvert.h>
-//#import <React/RCTUtils.h>
 
 @interface EXCalendar ()
 
@@ -85,11 +84,11 @@ EX_EXPORT_METHOD_AS(saveCalendarAsync,
   }
 
   EKCalendar *calendar = nil;
-  NSString *title = [RCTConvert NSString:details[@"title"]];
-  NSNumber *color = [RCTConvert NSNumber:details[@"color"]];
-  NSString *sourceId = [RCTConvert NSString:details[@"sourceId"]];
-  NSString *type = [RCTConvert NSString:details[@"entityType"]];
-  NSString *calendarId = [RCTConvert NSString:details[@"id"]];
+  NSString *title = details[@"title"];
+  NSNumber *color = details[@"color"];
+  NSString *sourceId = details[@"sourceId"];
+  NSString *type = details[@"entityType"];
+  NSString *calendarId = details[@"id"];
 
   if (calendarId) {
     calendar = [self.eventStore calendarWithIdentifier:calendarId];
@@ -122,7 +121,7 @@ EX_EXPORT_METHOD_AS(saveCalendarAsync,
   }
 
   if (color) {
-    calendar.CGColor = [RCTConvert UIColor:color].CGColor;
+    calendar.CGColor = [EXUtilities UIColor:color].CGColor;
   } else if (details[@"color"] == [NSNull null]) {
     calendar.CGColor = nil;
   }
@@ -236,23 +235,20 @@ EX_EXPORT_METHOD_AS(saveEventAsync,
   }
 
   EKEvent *calendarEvent = nil;
-  NSString *calendarId;
-  if (details[@"calendarId"]) {
-    calendarId = [RCTConvert NSString:details[@"calendarId"]];
-  }
-  NSString *eventId = [RCTConvert NSString:details[@"id"]];
-  NSString *title = [RCTConvert NSString:details[@"title"]];
-  NSString *location = [RCTConvert NSString:details[@"location"]];
-  NSDate *startDate = [RCTConvert NSDate:details[@"startDate"]];
-  NSDate *endDate = [RCTConvert NSDate:details[@"endDate"]];
-  NSDate *instanceStartDate = [RCTConvert NSDate:details[@"instanceStartDate"]];
-  NSNumber *allDay = [RCTConvert NSNumber:details[@"allDay"]];
-  NSString *notes = [RCTConvert NSString:details[@"notes"]];
-  NSString *timeZone = [RCTConvert NSString:details[@"timeZone"]];
-  NSString *url = [RCTConvert NSString:details[@"url"]];
-  NSArray *alarms = [RCTConvert NSArray:details[@"alarms"]];
-  NSDictionary *recurrenceRule = [RCTConvert NSDictionary:details[@"recurrenceRule"]];
-  NSString *availability = [RCTConvert NSString:details[@"availability"]];
+  NSString *calendarId = details[@"calendarId"];
+  NSString *eventId = details[@"id"];
+  NSString *title = details[@"title"];
+  NSString *location = details[@"location"];
+  NSDate *startDate = [EXUtilities NSDate:details[@"startDate"]];
+  NSDate *endDate = [EXUtilities NSDate:details[@"endDate"]];
+  NSDate *instanceStartDate = [EXUtilities NSDate:details[@"instanceStartDate"]];
+  NSNumber *allDay = details[@"allDay"];
+  NSString *notes = details[@"notes"];
+  NSString *timeZone = details[@"timeZone"];
+  NSString *url = details[@"url"];
+  NSArray *alarms = details[@"alarms"];
+  NSDictionary *recurrenceRule = details[@"recurrenceRule"];
+  NSString *availability = details[@"availability"];
 
   NSNumber *futureEvents = options[@"futureEvents"];
   EKSpan span = EKSpanThisEvent;
@@ -322,12 +318,13 @@ EX_EXPORT_METHOD_AS(saveEventAsync,
   }
 
   if (recurrenceRule) {
-    NSString *frequency = [RCTConvert NSString:recurrenceRule[@"frequency"]];
-    NSInteger interval = [RCTConvert NSInteger:recurrenceRule[@"interval"]];
-    NSInteger occurrence = [RCTConvert NSInteger:recurrenceRule[@"occurrence"]];
+    NSString *frequency = recurrenceRule[@"frequency"];
+    NSInteger interval = [recurrenceRule[@"interval"] integerValue];
+    NSInteger occurrence = [recurrenceRule[@"occurrence"] integerValue];
     NSDate *endDate = nil;
+
     if (recurrenceRule[@"endDate"]) {
-      endDate = [RCTConvert NSDate:recurrenceRule[@"endDate"]];
+      endDate = [EXUtilities NSDate:recurrenceRule[@"endDate"]];
     }
 
     EKRecurrenceRule *rule = [self _createRecurrenceRule:frequency interval:interval occurrence:occurrence endDate:endDate];
@@ -393,7 +390,7 @@ EX_EXPORT_METHOD_AS(deleteEventAsync,
     span = EKSpanFutureEvents;
   }
 
-  NSDate *instanceStartDate = [RCTConvert NSDate:event[@"instanceStartDate"]];
+  NSDate *instanceStartDate = [EXUtilities NSDate:event[@"instanceStartDate"]];
 
   EKEvent *calendarEvent = [self _getEventWithId:event[@"id"] startDate:instanceStartDate];
 
@@ -422,7 +419,7 @@ EX_EXPORT_METHOD_AS(getAttendeesForEventAsync,
     return;
   }
 
-  NSDate *instanceStartDate = [RCTConvert NSDate:event[@"instanceStartDate"]];
+  NSDate *instanceStartDate = [EXUtilities NSDate:event[@"instanceStartDate"]];
 
   EKEvent *item = [self _getEventWithId:event[@"id"] startDate:instanceStartDate];
 
@@ -523,22 +520,19 @@ EX_EXPORT_METHOD_AS(saveReminderAsync,
   }
 
   EKReminder *reminder = nil;
-  NSString *calendarId;
-  if (details[@"calendarId"]) {
-    calendarId = [RCTConvert NSString:details[@"calendarId"]];
-  }
-  NSString *reminderId = [RCTConvert NSString:details[@"id"]];
-  NSDate *startDate = [RCTConvert NSDate:details[@"startDate"]];
-  NSDate *dueDate = [RCTConvert NSDate:details[@"dueDate"]];
-  NSNumber *completed = [RCTConvert NSNumber:details[@"completed"]];
-  NSDate *completionDate = [RCTConvert NSDate:details[@"completionDate"]];
-  NSString *title = [RCTConvert NSString:details[@"title"]];
-  NSString *location = [RCTConvert NSString:details[@"location"]];
-  NSString *notes = [RCTConvert NSString:details[@"notes"]];
-  NSString *timeZone = [RCTConvert NSString:details[@"timeZone"]];
-  NSArray *alarms = [RCTConvert NSArray:details[@"alarms"]];
-  NSDictionary *recurrenceRule = [RCTConvert NSDictionary:details[@"recurrenceRule"]];
-  NSString *url = [RCTConvert NSString:details[@"url"]];
+  NSString *calendarId = details[@"calendarId"];
+  NSString *reminderId = details[@"id"];
+  NSDate *startDate = [EXUtilities NSDate:details[@"startDate"]];
+  NSDate *dueDate = [EXUtilities NSDate:details[@"dueDate"]];
+  NSDate *completionDate = [EXUtilities NSDate:details[@"completionDate"]];
+  NSNumber *completed = details[@"completed"];
+  NSString *title = details[@"title"];
+  NSString *location = details[@"location"];
+  NSString *notes = details[@"notes"];
+  NSString *timeZone = details[@"timeZone"];
+  NSArray *alarms = details[@"alarms"];
+  NSDictionary *recurrenceRule = details[@"recurrenceRule"];
+  NSString *url = details[@"url"];
 
   NSCalendar *currentCalendar = [NSCalendar currentCalendar];
 
@@ -596,12 +590,13 @@ EX_EXPORT_METHOD_AS(saveReminderAsync,
   }
 
   if (recurrenceRule) {
-    NSString *frequency = [RCTConvert NSString:recurrenceRule[@"frequency"]];
-    NSInteger interval = [RCTConvert NSInteger:recurrenceRule[@"interval"]];
-    NSInteger occurrence = [RCTConvert NSInteger:recurrenceRule[@"occurrence"]];
+    NSString *frequency = recurrenceRule[@"frequency"];
+    NSInteger interval = [recurrenceRule[@"interval"] integerValue];
+    NSInteger occurrence = [recurrenceRule[@"occurrence"] integerValue];
     NSDate *endDate = nil;
+
     if (recurrenceRule[@"endDate"]) {
-      endDate = [RCTConvert NSDate:recurrenceRule[@"endDate"]];
+      endDate = [EXUtilities NSDate:recurrenceRule[@"endDate"]];
     }
 
     EKRecurrenceRule *rule = [self _createRecurrenceRule:frequency interval:interval occurrence:occurrence endDate:endDate];
@@ -756,8 +751,8 @@ EX_EXPORT_METHOD_AS(getSourceByIdAsync,
 {
   EKAlarm *calendarEventAlarm = nil;
 
-  NSDate *date = [RCTConvert NSDate:alarm[@"absoluteDate"]];
-  NSNumber *relativeOffset = [RCTConvert NSNumber:alarm[@"relativeOffset"]];
+  NSDate *date = [EXUtilities NSDate:alarm[@"absoluteDate"]];
+  NSNumber *relativeOffset = alarm[@"relativeOffset"];
 
   if (date) {
     calendarEventAlarm = [EKAlarm alarmWithAbsoluteDate:date];

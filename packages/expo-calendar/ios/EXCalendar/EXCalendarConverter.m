@@ -1,7 +1,7 @@
 // Copyright 2015-present 650 Industries. All rights reserved.
 
-#import "EXCalendarConverter.h"
-#import "EXUtil.h"
+#import <EXCore/EXUtilities.h>
+#import <EXCalendar/EXCalendarConverter.h>
 
 @implementation EXCalendarConverter
 
@@ -137,7 +137,7 @@
   }
 
   if (calendar.CGColor) {
-    serializedCalendar[@"color"] = [EXUtil hexStringWithCGColor:calendar.CGColor];
+    serializedCalendar[@"color"] = [EXUtilities hexStringWithCGColor:calendar.CGColor];
   }
 
   if (calendar.type) {
