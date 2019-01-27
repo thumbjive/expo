@@ -1,3 +1,4 @@
+import { UnavailabilityError } from 'expo-errors';
 import { Platform, processColor } from 'react-native';
 import ExpoCalendar from './ExpoCalendar';
 export async function getCalendarsAsync(entityType) {
@@ -226,8 +227,8 @@ export async function deleteReminderAsync(id) {
     return ExpoCalendar.deleteReminderAsync(id);
 } // iOS
 export async function getSourcesAsync() {
-    if (Platform.OS === 'android') {
-        throw new Error('getSourcesAsync is not available on Android');
+    if (!ExpoCalendar.getSourcesAsync) {
+        throw new UnavailabilityError('Calendar', 'getSourcesAsync');
     }
     return ExpoCalendar.getSourcesAsync();
 } // iOS
@@ -250,6 +251,18 @@ export function openEventInCalendar(id) {
     }
     return ExpoCalendar.openEventInCalendar(parseInt(id, 10));
 } // Android
+export async function requestPermissionsAsync() {
+    if (!ExpoCalendar.requestPermissionsAsync) {
+        throw new UnavailabilityError('Calendar', 'requestPermissionsAsync');
+    }
+    return await ExpoCalendar.requestPermissionsAsync();
+}
+export async function requestRemindersPermissionsAsync() {
+    if (!ExpoCalendar.requestRemindersPermissionsAsync) {
+        throw new UnavailabilityError('Calendar', 'requestRemindersPermissionsAsync');
+    }
+    return await ExpoCalendar.requestRemindersPermissionsAsync();
+}
 export const EntityTypes = {
     EVENT: 'event',
     REMINDER: 'reminder',

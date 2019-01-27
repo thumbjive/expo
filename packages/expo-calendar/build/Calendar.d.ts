@@ -125,6 +125,8 @@ export declare function deleteReminderAsync(id: string): Promise<void>;
 export declare function getSourcesAsync(): Promise<Source[]>;
 export declare function getSourceAsync(id: string): Promise<Source>;
 export declare function openEventInCalendar(id: string): void;
+export declare function requestPermissionsAsync(): Promise<void>;
+export declare function requestRemindersPermissionsAsync(): Promise<void>;
 export declare const EntityTypes: {
     EVENT: string;
     REMINDER: string;

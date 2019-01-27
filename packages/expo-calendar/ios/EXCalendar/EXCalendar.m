@@ -41,7 +41,7 @@ EX_EXPORT_MODULE(ExpoCalendar);
 #pragma mark -
 #pragma mark Event Store Accessors
 
-EX_EXPORT_METHOD_AS(getCalendarAsync,
+EX_EXPORT_METHOD_AS(getCalendarsAsync,
                     getCalendarsAsync:(NSString *)typeString
                     resolver:(EXPromiseResolveBlock)resolve
                     rejecter:(EXPromiseRejectBlock)reject)
@@ -132,7 +132,7 @@ EX_EXPORT_METHOD_AS(saveCalendarAsync,
     resolve(calendar.calendarIdentifier);
   } else {
     reject(@"E_CALENDAR_NOT_SAVED",
-         [NSString stringWithFormat:@"Calendar %@ could not be saved", title],
+           [NSString stringWithFormat:@"Calendar '%@' could not be saved: %@", title, error.description],
          error);
   }
 }
@@ -165,8 +165,8 @@ EX_EXPORT_METHOD_AS(deleteCalendarAsync,
 }
 
 EX_EXPORT_METHOD_AS(getEventsAsync,
-                    getEventsAsync:(NSDate *)startDate
-                    endDate:(NSDate *)endDate
+                    getEventsAsync:(NSNumber *)startDateTimestamp
+                    endDate:(NSNumber *)endDateTimestamp
                     calendars:(NSArray *)calendars
                     resolver:(EXPromiseResolveBlock)resolve
                     rejecter:(EXPromiseRejectBlock)reject)
@@ -176,6 +176,8 @@ EX_EXPORT_METHOD_AS(getEventsAsync,
   }
 
   NSMutableArray *eventCalendars;
+  NSDate *startDate = [EXUtilities NSDate:startDateTimestamp];
+  NSDate *endDate = [EXUtilities NSDate:endDateTimestamp];
 
   if (calendars.count) {
     eventCalendars = [[NSMutableArray alloc] init];
@@ -710,6 +712,26 @@ EX_EXPORT_METHOD_AS(getSourceByIdAsync,
   }
 
   resolve([EXCalendarConverter serializeSource:source]);
+}
+
+EX_EXPORT_METHOD_AS(requestPermissionsAsync,
+                    requestPermissionsAsync:(EXPromiseResolveBlock)resolve
+                    reject:(EXPromiseRejectBlock)reject)
+{
+  if (!_permissionsManager) {
+    return reject(@"E_NO_PERMISSIONS", @"Permissions module not found. Are you sure that Expo modules are properly linked?", nil);
+  }
+  [_permissionsManager askForPermission:@"calendar" withResult:resolve withRejecter:reject];
+}
+
+EX_EXPORT_METHOD_AS(requestRemindersPermissionsAsync,
+                    requestRemindersPermissionsAsync:(EXPromiseResolveBlock)resolve
+                    reject:(EXPromiseRejectBlock)reject)
+{
+  if (!_permissionsManager) {
+    return reject(@"E_NO_PERMISSIONS", @"Permissions module not found. Are you sure that Expo modules are properly linked?", nil);
+  }
+  [_permissionsManager askForPermission:@"reminders" withResult:resolve withRejecter:reject];
 }
 
 #pragma mark - helpers
