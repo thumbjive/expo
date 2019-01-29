@@ -53,7 +53,7 @@ const _orientationChangeEmitter = new NativeEventEmitter(ExponentScreenOrientati
 let _orientationChangeSubscribers: EmitterSubscription[] = [];
 
 export function allow(orientationLock: OrientationLock): void {
-  console.warn("'ScreenOrientation.allow' is deprecated in favour of 'ScreenOrientation.lockAsync'");
+  console.warn("'ScreenOrientation.allow' is deprecated in favour of 'ScreenOrientation.lockAsync' and will be removed in SDK 35 or later");
   lockAsync(orientationLock);
 }
 
