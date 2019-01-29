@@ -37,7 +37,7 @@ type OrientationInfo = {
   horizontalSizeClass?: iOSSizeClass;
 };
 
-type PlatformInfo = {
+type PlatformOrientationInfo = {
   screenOrientationConstantAndroid?: number;
   screenOrientationArrayIOS?: Orientation[];
 };
