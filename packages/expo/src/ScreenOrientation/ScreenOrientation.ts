@@ -195,7 +195,7 @@ export function removeOrientationChangeListeners(): void {
     const subscriber = _orientationChangeSubscribers[i];
     subscriber.remove();
 
-    // remove after a successful unsuscribe
+    // remove after a successful unsubscribe
     _orientationChangeSubscribers.pop(); 
   }
 }
