@@ -90,6 +90,7 @@ module.exports = {
       type: 'object',
       mock: {
         BlurViewManager: [{ key: 0, argumentsCount: 2, name: 'updateProps' }],
+        EXLinearGradientManager: [],
         ExpoAdsAdMobBannerView: [],
         ExpoAdsAdMobInterstitialManager: [
           { key: 0, argumentsCount: 1, name: 'setTestDeviceID' },
@@ -107,12 +108,21 @@ module.exports = {
           { key: 4, argumentsCount: 1, name: 'setAdUnitID' },
           { key: 5, argumentsCount: 0, name: 'getIsReady' },
         ],
+        ExpoAmplitude: [
+          { key: 0, argumentsCount: 1, name: 'setUserId' },
+          { key: 1, argumentsCount: 1, name: 'logEvent' },
+          { key: 2, argumentsCount: 2, name: 'logEventWithProperties' },
+          { key: 3, argumentsCount: 1, name: 'initialize' },
+          { key: 4, argumentsCount: 1, name: 'setUserProperties' },
+          { key: 5, argumentsCount: 2, name: 'setGroup' },
+          { key: 6, argumentsCount: 0, name: 'clearUserProperties' },
+        ],
         ExpoAppAuth: [{ key: 0, argumentsCount: 1, name: 'executeAsync' }],
         ExpoBackgroundFetch: [
           { key: 0, argumentsCount: 1, name: 'unregisterTaskAsync' },
           { key: 1, argumentsCount: 1, name: 'setMinimumIntervalAsync' },
           { key: 2, argumentsCount: 0, name: 'getStatusAsync' },
-          { key: 3, argumentsCount: 1, name: 'registerTaskAsync' },
+          { key: 3, argumentsCount: 2, name: 'registerTaskAsync' },
         ],
         ExpoBarCodeScannerModule: [{ key: 0, argumentsCount: 2, name: 'scanFromURLAsync' }],
         ExpoBarCodeScannerView: [],
@@ -138,6 +148,7 @@ module.exports = {
           { key: 14, argumentsCount: 1, name: 'writeContactToFileAsync' },
           { key: 15, argumentsCount: 0, name: 'dismissFormAsync' },
         ],
+        ExpoDocumentPicker: [{ key: 0, argumentsCount: 1, name: 'getDocumentAsync' }],
         ExpoFaceDetector: [{ key: 0, argumentsCount: 1, name: 'detectFaces' }],
         ExpoFontLoader: [{ key: 0, argumentsCount: 2, name: 'loadAsync' }],
         ExpoGoogleSignIn: [
@@ -150,6 +161,10 @@ module.exports = {
           { key: 6, argumentsCount: 0, name: 'signInAsync' },
           { key: 7, argumentsCount: 0, name: 'signInSilentlyAsync' },
           { key: 8, argumentsCount: 0, name: 'isConnectedAsync' },
+        ],
+        ExpoKeepAwake: [
+          { key: 0, argumentsCount: 0, name: 'activate' },
+          { key: 1, argumentsCount: 0, name: 'deactivate' },
         ],
         ExpoLocalAuthentication: [
           { key: 0, argumentsCount: 0, name: 'supportedAuthenticationTypesAsync' },
@@ -261,6 +276,10 @@ module.exports = {
         ExponentGyroscope: [
           { key: 0, argumentsCount: 0, name: 'isAvailableAsync' },
           { key: 1, argumentsCount: 1, name: 'setUpdateInterval' },
+        ],
+        ExponentImagePicker: [
+          { key: 0, argumentsCount: 1, name: 'launchCameraAsync' },
+          { key: 1, argumentsCount: 1, name: 'launchImageLibraryAsync' },
         ],
         ExponentMagnetometer: [
           { key: 0, argumentsCount: 0, name: 'isAvailableAsync' },
@@ -506,12 +525,13 @@ module.exports = {
       mock: [
         'ExpoVideoView',
         'VibrancyView',
-        'ExpoBarCodeScannerView',
-        'ExponentCamera',
-        'BlurView',
-        'ExpoAdsAdMobBannerView',
-        'ExponentGLView',
         'ExpoAdsPublisherBannerView',
+        'ExponentCamera',
+        'ExpoBarCodeScannerView',
+        'BlurView',
+        'ExponentGLView',
+        'ExpoAdsAdMobBannerView',
+        'ExpoLinearGradient',
       ],
     },
     callMethod: { type: 'function', functionType: 'promise' },
@@ -557,15 +577,6 @@ module.exports = {
     startAsync: { type: 'function', functionType: 'promise' },
     stopAsync: { type: 'function', functionType: 'promise' },
   },
-  ExponentAmplitude: {
-    clearUserProperties: { type: 'function', functionType: 'async' },
-    initialize: { type: 'function', functionType: 'async' },
-    logEvent: { type: 'function', functionType: 'async' },
-    logEventWithProperties: { type: 'function', functionType: 'async' },
-    setGroup: { type: 'function', functionType: 'async' },
-    setUserId: { type: 'function', functionType: 'async' },
-    setUserProperties: { type: 'function', functionType: 'async' },
-  },
   ExponentCalendar: {
     deleteCalendarAsync: { type: 'function', functionType: 'promise' },
     deleteEventAsync: { type: 'function', functionType: 'promise' },
@@ -582,7 +593,6 @@ module.exports = {
     saveEventAsync: { type: 'function', functionType: 'promise' },
     saveReminderAsync: { type: 'function', functionType: 'promise' },
   },
-  ExponentDocumentPicker: { getDocumentAsync: { type: 'function', functionType: 'promise' } },
   ExponentErrorRecovery: { setRecoveryProps: { type: 'function', functionType: 'async' } },
   ExponentHaptic: {
     impact: { type: 'function', functionType: 'async' },
@@ -590,15 +600,6 @@ module.exports = {
     selection: { type: 'function', functionType: 'async' },
   },
   ExponentImageManipulator: { manipulate: { type: 'function', functionType: 'promise' } },
-  ExponentImagePicker: {
-    launchCameraAsync: { type: 'function', functionType: 'promise' },
-    launchImageLibraryAsync: { type: 'function', functionType: 'promise' },
-  },
-  ExponentKeepAwake: {
-    activate: { type: 'function', functionType: 'async' },
-    deactivate: { type: 'function', functionType: 'async' },
-  },
-  ExponentLinearGradientManager: {},
   ExponentNotifications: {
     cancelAllScheduledNotificationsAsync: { type: 'function', functionType: 'promise' },
     cancelScheduledNotificationAsync: { type: 'function', functionType: 'promise' },
