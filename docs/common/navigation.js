@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const { clone, find, findIndex, sortBy } = require('lodash');
 const {
   ROOT,
   INTRODUCTION,
@@ -12,7 +12,7 @@ const navigation = require('./navigation-data');
 const packageVersion = require('../package.json').version;
 
 const sortAccordingToReference = (arr, reference) => {
-  reference = _.clone(reference);
+  reference = clone(reference);
   reference.reverse();
 
   let subSort = (arr, i) => arr.slice(0, i).concat(arr.slice(i).sort());
@@ -21,8 +21,8 @@ const sortAccordingToReference = (arr, reference) => {
     category.weight = reference.indexOf(category.name) * -1;
   });
 
-  let arrSortedByWeight = _.sortBy(arr, ['weight']);
-  return subSort(arrSortedByWeight, _.findIndex(arrSortedByWeight, { weight: 1 }));
+  let arrSortedByWeight = sortBy(arr, ['weight']);
+  return subSort(arrSortedByWeight, findIndex(arrSortedByWeight, { weight: 1 }));
 };
 
 const sections = [
@@ -42,7 +42,7 @@ const sortNav = nav => {
   nav = sortAccordingToReference(nav, ROOT);
 
   sections.forEach(({ name, reference }) => {
-    let section = _.find(nav, o => {
+    let section = find(nav, o => {
       return o.name.toLowerCase() === name.toLowerCase();
     });
     if (section) {
