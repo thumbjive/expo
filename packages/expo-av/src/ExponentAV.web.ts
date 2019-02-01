@@ -1,4 +1,5 @@
-import { PlaybackStatusToSet, PlaybackStatus, PlaybackNativeSource } from './AV';
+import { PlaybackStatusToSet, PlaybackStatus, PlaybackNativeSource,
+  PLAYBACK_PITCH_CORRECTION_LOW_QUALITY } from './AV';
 
 function getStatusFromMedia(media?: HTMLMediaElement): PlaybackStatus {
   if (!media) {
@@ -30,6 +31,7 @@ function getStatusFromMedia(media?: HTMLMediaElement): PlaybackStatus {
     rate: media.playbackRate,
     // TODO: Bacon: This seems too complicated right now: https://webaudio.github.io/web-audio-api/#dom-biquadfilternode-frequency
     shouldCorrectPitch: false,
+    iosPitchCorrectionQuality: PLAYBACK_PITCH_CORRECTION_LOW_QUALITY,
     volume: media.volume,
     isMuted: media.muted,
     isLooping: media.loop,

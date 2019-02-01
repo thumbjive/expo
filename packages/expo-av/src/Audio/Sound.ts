@@ -235,6 +235,7 @@ export class Sound implements Playback {
     tolerances?: { toleranceMillisBefore?: number; toleranceMillisAfter?: number }
   ) => Promise<PlaybackStatus>;
   setRateAsync!: (rate: number, shouldCorrectPitch: boolean) => Promise<PlaybackStatus>;
+  setIosPitchCorrectionQuality!: (quality: number) => Promise<PlaybackStatus>;
   setVolumeAsync!: (volume: number) => Promise<PlaybackStatus>;
   setIsMutedAsync!: (isMuted: boolean) => Promise<PlaybackStatus>;
   setIsLoopingAsync!: (isLooping: boolean) => Promise<PlaybackStatus>;

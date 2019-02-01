@@ -1,9 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { ScrollView, Slider, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { ScrollView, Slider, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Colors from '../../constants/Colors';
+import {
+  PLAYBACK_PITCH_CORRECTION_HIGH_QUALITY,
+  PLAYBACK_PITCH_CORRECTION_LOW_QUALITY,
+  PLAYBACK_PITCH_CORRECTION_MEDIUM_QUALITY,
+} from './AV';
 
 export default class Player extends React.Component {
   static propTypes = {
@@ -22,6 +27,7 @@ export default class Player extends React.Component {
     playAsync: PropTypes.func.isRequired,
     pauseAsync: PropTypes.func.isRequired,
     setRateAsync: PropTypes.func.isRequired,
+    setIosPitchCorrectionQuality: PropTypes.func.isRequired,
     setIsMutedAsync: PropTypes.func.isRequired,
     setPositionAsync: PropTypes.func.isRequired,
     setIsLoopingAsync: PropTypes.func.isRequired,
@@ -33,6 +39,7 @@ export default class Player extends React.Component {
     positionMillis: PropTypes.number.isRequired,
     durationMillis: PropTypes.number.isRequired,
     shouldCorrectPitch: PropTypes.bool.isRequired,
+    iosPitchCorrectionQuality: PropTypes.number.isRequired,
     isPlaying: PropTypes.bool.isRequired,
 
     // Error
@@ -64,6 +71,15 @@ export default class Player extends React.Component {
 
   _toggleShouldCorrectPitch = () =>
     this.props.setRateAsync(this.props.rate, !this.props.shouldCorrectPitch);
+
+  _selectLoFiPitchCorrect = () =>
+    this.props.setIosPitchCorrectionQuality(PLAYBACK_PITCH_CORRECTION_LOW_QUALITY);
+
+  _selectMedFiPitchCorrect = () =>
+    this.props.setIosPitchCorrectionQuality(PLAYBACK_PITCH_CORRECTION_MEDIUM_QUALITY);
+
+  _selectHiFiPitchCorrect = () =>
+    this.props.setIosPitchCorrectionQuality(PLAYBACK_PITCH_CORRECTION_HIGH_QUALITY);
 
   _renderPlayPauseButton = () => {
     let onPress = this._pause;
@@ -159,6 +175,25 @@ export default class Player extends React.Component {
             title: 'Correct pitch',
             onPress: this._toggleShouldCorrectPitch,
             active: this.props.shouldCorrectPitch,
+          })}
+          {this._renderAuxiliaryButton({
+            iconName: 'empty-heart',
+            title: 'Lo-fi pitch-correct',
+            onPress: this._selectLoFiPitchCorrect,
+            active: this.props.iosPitchCorrectionQuality === PLAYBACK_PITCH_CORRECTION_LOW_QUALITY,
+          })}
+          {this._renderAuxiliaryButton({
+            iconName: 'half-heart',
+            title: 'Med-fi pitch-correct',
+            onPress: this._selectMedFiPitchCorrect,
+            active:
+              this.props.iosPitchCorrectionQuality === PLAYBACK_PITCH_CORRECTION_MEDIUM_QUALITY,
+          })}
+          {this._renderAuxiliaryButton({
+            iconName: 'heart',
+            title: 'Hi-fi pitch-correct',
+            onPress: this._selectHiFiPitchCorrect,
+            active: this.props.iosPitchCorrectionQuality === PLAYBACK_PITCH_CORRECTION_HIGH_QUALITY,
           })}
           {this._renderAuxiliaryButton({
             iconName: 'volume-off',

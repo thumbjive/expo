@@ -2,6 +2,7 @@ import React from 'react';
 import { Audio } from 'expo';
 
 import Player from './Player';
+import { PLAYBACK_PITCH_CORRECTION_LOW_QUALITY } from './AV';
 
 export default class AudioPlayer extends React.Component {
   state = {
@@ -13,6 +14,7 @@ export default class AudioPlayer extends React.Component {
     durationMillis: 0,
     rate: 1,
     shouldCorrectPitch: false,
+    iosPitchCorrectionQuality: PLAYBACK_PITCH_CORRECTION_LOW_QUALITY,
   };
 
   componentDidMount() {
@@ -53,6 +55,9 @@ export default class AudioPlayer extends React.Component {
   _setRateAsync = async (rate, shouldCorrectPitch) =>
     await this._sound.setRateAsync(rate, shouldCorrectPitch);
 
+  _setIosPitchCorrectionQuality = async quality => 
+    await this._sound.setIosPitchCorrectionQuality(quality);
+
   render() {
     return (
       <Player
@@ -62,6 +67,7 @@ export default class AudioPlayer extends React.Component {
         setPositionAsync={this._setPositionAsync}
         setIsLoopingAsync={this._setIsLoopingAsync}
         setRateAsync={this._setRateAsync}
+        setIosPitchCorrectionQuality={this._setIosPitchCorrectionQuality}
         setIsMutedAsync={this._setIsMutedAsync}
       />
     );
