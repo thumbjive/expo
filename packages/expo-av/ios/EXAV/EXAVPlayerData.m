@@ -16,6 +16,7 @@ NSString *const EXAVPlayerDataStatusIsPlayingKeyPath = @"isPlaying";
 NSString *const EXAVPlayerDataStatusIsBufferingKeyPath = @"isBuffering";
 NSString *const EXAVPlayerDataStatusRateKeyPath = @"rate";
 NSString *const EXAVPlayerDataStatusShouldCorrectPitchKeyPath = @"shouldCorrectPitch";
+NSString *const EXAVPlayerDataStatusIosPitchCorrectionQualityKeyPath = @"iosPitchCorrectionQuality";
 NSString *const EXAVPlayerDataStatusVolumeKeyPath = @"volume";
 NSString *const EXAVPlayerDataStatusIsMutedKeyPath = @"isMuted";
 NSString *const EXAVPlayerDataStatusIsLoopingKeyPath = @"isLooping";
@@ -47,6 +48,7 @@ NSString *const EXAVPlayerDataObserverPlaybackBufferEmptyKeyPath = @"playbackBuf
 @property (nonatomic, strong) NSNumber *observedRate;
 @property (nonatomic, assign) AVPlayerTimeControlStatus timeControlStatus;
 @property (nonatomic, assign) BOOL shouldCorrectPitch;
+@property (nonatomic, assign) NSNumber *iosPitchCorrectionQuality;
 @property (nonatomic, strong) NSNumber* volume;
 @property (nonatomic, assign) BOOL isMuted;
 @property (nonatomic, assign) BOOL isLooping;
@@ -96,6 +98,7 @@ NSString *const EXAVPlayerDataObserverPlaybackBufferEmptyKeyPath = @"playbackBuf
     _rate = @(1.0);
     _observedRate = @(1.0);
     _shouldCorrectPitch = NO;
+    _iosPitchCorrectionQuality = @0;
     _volume = @(1.0);
     _isMuted = NO;
     _isLooping = NO;
@@ -156,7 +159,17 @@ NSString *const EXAVPlayerDataObserverPlaybackBufferEmptyKeyPath = @"playbackBuf
           strongSelfInner.currentPosition = strongSelfInner.player.currentTime;
 
           if (strongSelfInner.shouldCorrectPitch) {
-            strongSelfInner.player.currentItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmLowQualityZeroLatency;
+            switch ([strongSelfInner.iosPitchCorrectionQuality intValue]) {
+              case 1:
+                strongSelfInner.player.currentItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmTimeDomain;
+                break;
+              case 2:
+                strongSelfInner.player.currentItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmSpectral;
+                break;
+              default:
+                strongSelfInner.player.currentItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmLowQualityZeroLatency;
+                break;
+            }
           } else {
             strongSelfInner.player.currentItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmVarispeed;
           }
@@ -265,6 +278,10 @@ NSString *const EXAVPlayerDataObserverPlaybackBufferEmptyKeyPath = @"playbackBuf
     NSNumber *shouldCorrectPitch = parameters[EXAVPlayerDataStatusShouldCorrectPitchKeyPath];
     _shouldCorrectPitch = shouldCorrectPitch.boolValue;
   }
+  if ([parameters objectForKey:EXAVPlayerDataStatusIosPitchCorrectionQualityKeyPath] != nil) {
+    NSNumber *iosPitchCorrectionQuality = parameters[EXAVPlayerDataStatusIosPitchCorrectionQualityKeyPath];
+    _iosPitchCorrectionQuality = iosPitchCorrectionQuality;
+  }
   if ([parameters objectForKey:EXAVPlayerDataStatusVolumeKeyPath] != nil) {
     NSNumber *volume = parameters[EXAVPlayerDataStatusVolumeKeyPath];
     _volume = volume;
@@ -290,7 +307,17 @@ NSString *const EXAVPlayerDataObserverPlaybackBufferEmptyKeyPath = @"playbackBuf
 
     // Apply idempotent parameters.
     if (_shouldCorrectPitch) {
-      _player.currentItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmLowQualityZeroLatency;
+      switch ([_iosPitchCorrectionQuality intValue]) {
+        case 1:
+          _player.currentItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmTimeDomain;
+          break;
+        case 2:
+          _player.currentItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmSpectral;
+          break;
+        default:
+          _player.currentItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmLowQualityZeroLatency;
+          break;
+      }
     } else {
       _player.currentItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmVarispeed;
     }
@@ -439,6 +466,7 @@ NSString *const EXAVPlayerDataObserverPlaybackBufferEmptyKeyPath = @"playbackBuf
                                           
                                           EXAVPlayerDataStatusRateKeyPath: _rate,
                                           EXAVPlayerDataStatusShouldCorrectPitchKeyPath: @(_shouldCorrectPitch),
+                                          EXAVPlayerDataStatusIosPitchCorrectionQualityKeyPath: @([_iosPitchCorrectionQuality intValue]),
                                           EXAVPlayerDataStatusVolumeKeyPath: @(_player.volume),
                                           EXAVPlayerDataStatusIsMutedKeyPath: @(_player.muted),
                                           EXAVPlayerDataStatusIsLoopingKeyPath: @(_isLooping),

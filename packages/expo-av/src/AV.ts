@@ -10,6 +10,11 @@ import { Platform } from 'expo-core';
 //  API to select stream type on Android
 //  subtitles API
 
+// Correspond to 3 timestretch algos in Apple's AVFoundation libraries
+export const PLAYBACK_PITCH_CORRECTION_LOW_QUALITY: number = 0;
+export const PLAYBACK_PITCH_CORRECTION_MEDIUM_QUALITY: number = 1;
+export const PLAYBACK_PITCH_CORRECTION_HIGH_QUALITY: number = 2;
+
 export type PlaybackSource =
   | number
   | {
@@ -50,6 +55,7 @@ export type PlaybackStatus =
 
       rate: number;
       shouldCorrectPitch: boolean;
+      iosPitchCorrectionQuality: number;
       volume: number;
       isMuted: boolean;
       isLooping: boolean;
@@ -66,6 +72,7 @@ export type PlaybackStatusToSet = {
   shouldPlay?: boolean;
   rate?: number;
   shouldCorrectPitch?: boolean;
+  iosPitchCorrectionQuality?: number;
   volume?: number;
   isMuted?: boolean;
   isLooping?: boolean;
@@ -78,6 +85,7 @@ export const _DEFAULT_INITIAL_PLAYBACK_STATUS: PlaybackStatusToSet = {
   shouldPlay: false,
   rate: 1.0,
   shouldCorrectPitch: false,
+  iosPitchCorrectionQuality: PLAYBACK_PITCH_CORRECTION_LOW_QUALITY,
   volume: 1.0,
   isMuted: false,
   isLooping: false,
@@ -226,6 +234,7 @@ export interface Playback extends AV {
     tolerances?: { toleranceMillisBefore?: number; toleranceMillisAfter?: number }
   ): Promise<PlaybackStatus>;
   setRateAsync(rate: number, shouldCorrectPitch: boolean): Promise<PlaybackStatus>;
+  setIosPitchCorrectionQuality(quality: number): Promise<PlaybackStatus>;
   setVolumeAsync(volume: number): Promise<PlaybackStatus>;
   setIsMutedAsync(isMuted: boolean): Promise<PlaybackStatus>;
   setIsLoopingAsync(isLooping: boolean): Promise<PlaybackStatus>;
@@ -274,6 +283,10 @@ export const PlaybackMixin = {
 
   async setRateAsync(rate: number, shouldCorrectPitch: boolean): Promise<PlaybackStatus> {
     return ((this as any) as AV).setStatusAsync({ rate, shouldCorrectPitch });
+  },
+
+  async setIosPitchCorrectionQuality(quality: number): Promise<PlaybackStatus> {
+    return ((this as any) as AV).setIosPitchCorrectionQuality({ quality});
   },
 
   async setVolumeAsync(volume: number): Promise<PlaybackStatus> {

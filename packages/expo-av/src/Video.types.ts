@@ -52,6 +52,7 @@ export type Props = {
   shouldPlay?: boolean;
   rate?: number;
   shouldCorrectPitch?: boolean;
+  iosPitchCorrectionQuality?: number;
   volume?: number;
   isMuted?: boolean;
   isLooping?: boolean;

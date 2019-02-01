@@ -118,6 +118,7 @@ export default class Video extends React.Component<Props, State> implements Play
       shouldPlay: PropTypes.bool,
       rate: PropTypes.number,
       shouldCorrectPitch: PropTypes.bool,
+      iosPitchCorrectionQuality: PropTypes.number,
       volume: PropTypes.number,
       isMuted: PropTypes.bool,
       isLooping: PropTypes.bool,
@@ -127,6 +128,7 @@ export default class Video extends React.Component<Props, State> implements Play
     shouldPlay: PropTypes.bool,
     rate: PropTypes.number,
     shouldCorrectPitch: PropTypes.bool,
+    iosPitchCorrectionQuality: PropTypes.number,
     volume: PropTypes.number,
     isMuted: PropTypes.bool,
     isLooping: PropTypes.bool,
@@ -290,6 +292,7 @@ export default class Video extends React.Component<Props, State> implements Play
     tolerances?: { toleranceMillisBefore?: number; toleranceMillisAfter?: number }
   ) => Promise<PlaybackStatus>;
   setRateAsync!: (rate: number, shouldCorrectPitch: boolean) => Promise<PlaybackStatus>;
+  setIosPitchCorrectionQuality!: (quality: number) => Promise<PlaybackStatus>;
   setVolumeAsync!: (volume: number) => Promise<PlaybackStatus>;
   setIsMutedAsync!: (isMuted: boolean) => Promise<PlaybackStatus>;
   setIsLoopingAsync!: (isLooping: boolean) => Promise<PlaybackStatus>;
