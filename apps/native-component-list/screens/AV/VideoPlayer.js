@@ -2,6 +2,7 @@ import React from 'react';
 import { Video } from 'expo';
 
 import Player from './Player';
+import { PLAYBACK_PITCH_CORRECTION_LOW_QUALITY } from './AV';
 
 export default class VideoPlayer extends React.Component {
   state = {
@@ -13,6 +14,7 @@ export default class VideoPlayer extends React.Component {
     durationMillis: 0,
     rate: 1,
     shouldCorrectPitch: false,
+    iosPitchCorrectionQuality: PLAYBACK_PITCH_CORRECTION_LOW_QUALITY,
     useNativeControls: false,
     resizeMode: Video.RESIZE_MODE_CONTAIN,
   };
@@ -35,6 +37,9 @@ export default class VideoPlayer extends React.Component {
 
   _setRateAsync = async (rate, shouldCorrectPitch) =>
     await this._video.setRateAsync(rate, shouldCorrectPitch);
+
+  _setIosPitchCorrectionQuality = async quality => 
+    await this._video.setIosPitchCorrectionQuality(quality);
 
   _toggleNativeControls = () =>
     this.setState(({ useNativeControls }) => ({ useNativeControls: !useNativeControls }));
@@ -67,6 +72,7 @@ export default class VideoPlayer extends React.Component {
         setIsLoopingAsync={this._setIsLoopingAsync}
         setIsMutedAsync={this._setIsMutedAsync}
         setRateAsync={this._setRateAsync}
+        setIosPitchCorrectionQuality={this._setIosPitchCorrectionQuality}
         extraButtons={[
           {
             iconName: 'options',
