@@ -286,7 +286,7 @@ export const PlaybackMixin = {
   },
 
   async setIosPitchCorrectionQuality(quality: number): Promise<PlaybackStatus> {
-    return ((this as any) as AV).setIosPitchCorrectionQuality({ iosPitchCorrectionQuality: quality });
+    return ((this as any) as AV).setStatusAsync({ iosPitchCorrectionQuality: quality });
   },
 
   async setVolumeAsync(volume: number): Promise<PlaybackStatus> {
