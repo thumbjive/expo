@@ -156,7 +156,7 @@ NSString *const EXAVPlayerDataObserverPlaybackBufferEmptyKeyPath = @"playbackBuf
           strongSelfInner.currentPosition = strongSelfInner.player.currentTime;
 
           if (strongSelfInner.shouldCorrectPitch) {
-            strongSelfInner.player.currentItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmLowQualityZeroLatency;
+            strongSelfInner.player.currentItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmSpectral;
           } else {
             strongSelfInner.player.currentItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmVarispeed;
           }
@@ -290,7 +290,7 @@ NSString *const EXAVPlayerDataObserverPlaybackBufferEmptyKeyPath = @"playbackBuf
 
     // Apply idempotent parameters.
     if (_shouldCorrectPitch) {
-      _player.currentItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmLowQualityZeroLatency;
+      _player.currentItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmSpectral;
     } else {
       _player.currentItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmVarispeed;
     }
